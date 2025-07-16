@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from src.agent.q_learning import QLearningAgent
+from src.agent.q_learning import QLearningAgent  # ✅ Integrated agent with cloud_env
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -10,15 +10,19 @@ def simulate():
         return jsonify({"message": "Use POST method to run simulation"}), 200
 
     data = request.json or {}
-    print("Simulation Input Received:", data)
+    print("✅ Simulation Input Received:", data)
 
+    # Optional frontend parameters
     alpha = data.get('alpha', 0.1)
-    gamma = data.get('gamma', 0.9)
+    gamma = data.get('gamma', 0.95)
     epsilon = data.get('epsilon', 0.2)
     episodes = data.get('episodes', 100)
 
+    # 🧠 Initialize and run agent
     agent = QLearningAgent(alpha=alpha, gamma=gamma, epsilon=epsilon, episodes=episodes)
+    agent.load_q_table()
     metrics = agent.simulate()
+    agent.save_q_table()
 
     return jsonify({
         "message": "Simulation completed",
@@ -26,30 +30,10 @@ def simulate():
         "status": "success"
     }), 200
 
-def simulate():
-    data = request.json
-    print("Simulation Input Received:", data)
 
-    # Optional: Use values from frontend if needed
-    alpha = data.get('alpha', 0.1)
-    gamma = data.get('gamma', 0.9)
-    epsilon = data.get('epsilon', 0.2)
-    episodes = data.get('episodes', 100)
-
-    # Run Q-Learning simulation
-    agent = QLearningAgent(alpha=alpha, gamma=gamma, epsilon=epsilon, episodes=episodes)
-    metrics = agent.simulate()
-
-    return jsonify({
-        "message": "Simulation completed",
-        "metrics": metrics,
-        "status": "success"
-    }), 200
-
-# GET /results — Currently returns last metrics (or placeholder)
+# GET /results — Placeholder for future result caching
 @api_blueprint.route('/results', methods=['GET'])
 def results():
-    # This can be replaced to read from file/db later if persistent
     dummy_results = {
         "energy_saved": "25%",
         "vm_migrations": 42,
