@@ -1,4 +1,3 @@
-
 # ✅ Team Task Assignments — Energy-Efficient VM Consolidation using Q-Learning
 
 This file lists everyone's responsibilities, task priorities, and what needs to be done first.
@@ -7,8 +6,8 @@ This file lists everyone's responsibilities, task priorities, and what needs to 
 
 ## 🔁 Workflow Reminder
 
-> ✅ Do **NOT** push directly to `main`  
-> ✅ Everyone should work on a feature branch from `dev`  
+> ✅ Do **NOT** push directly to `main`
+> ✅ Everyone should work on a feature branch from `dev`
 > ✅ After completing your task, create a **Pull Request** (PR) to merge into `dev`
 
 ---
@@ -16,8 +15,9 @@ This file lists everyone's responsibilities, task priorities, and what needs to 
 ## 🧠 Foundational Tasks (Must be done first)
 
 ### 👤 **Abhinav Mishra** — VM & Host Environment (`cloud_env.py`)
-- [x] Define `VM` and `Host` classes
-- [x] Implement `assign_vm`, `remove_vm`
+
+- [X] Define `VM` and `Host` classes
+- [X] Implement `assign_vm`, `remove_vm`
 - [ ] Add SLA violation detection
 - [ ] Add power consumption model (optional)
 - [ ] Track number of migrations
@@ -29,9 +29,10 @@ This file lists everyone's responsibilities, task priorities, and what needs to 
 ## 🧠 Learning Agent Logic
 
 ### 👤 **Shubh Gupta** — Q-Learning Agent (`q_learning.py`)
-- [x] Setup `QLearningAgent` class
-- [x] Implement Q-table update logic
-- [x] Action selection using ε-greedy
+
+- [X] Setup `QLearningAgent` class
+- [X] Implement Q-table update logic
+- [X] Action selection using ε-greedy
 - [ ] Plug into real environment state (wait for Abhinav)
 - [ ] Design reward function based on SLA/energy/migration
 - [ ] Export metrics (energy, SLA, migrations, etc.)
@@ -43,8 +44,9 @@ This file lists everyone's responsibilities, task priorities, and what needs to 
 ## 🔧 Backend & Integration
 
 ### 👤 **Aditya Pandey** — API & Flask Integration (`app.py`, `routes.py`)
-- [x] Setup Flask server
-- [x] Create `/simulate` and `/results` endpoints
+
+- [X] Setup Flask server
+- [ ] Create `/simulate` and `/results` endpoints
 - [ ] Accept simulation parameters from frontend
 - [ ] Connect API to real `QLearningAgent` and return metrics
 
@@ -55,6 +57,7 @@ This file lists everyone's responsibilities, task priorities, and what needs to 
 ## 🎨 Frontend Development
 
 ### 👤 **Harsh Sharma** — React Dashboard
+
 - [ ] Create input form for parameters (VMs, hosts, alpha, etc.)
 - [ ] Connect to `/api/simulate` using `axios` or `fetch()`
 - [ ] Show simulation result metrics
@@ -67,7 +70,8 @@ This file lists everyone's responsibilities, task priorities, and what needs to 
 ## 🧪 Documentation & Testing
 
 ### 👤 **Adarsh Verma** — Docs & Quality Assurance
-- [x] Add `README.md`, `LICENSE`, `CONTRIBUTING.md`
+
+- [X] Add `README.md`, `LICENSE`, `CONTRIBUTING.md`
 - [ ] Create sample JSON request/response files
 - [ ] Document environment design (`cloud_env.py`)
 - [ ] Write test cases for simulation logic

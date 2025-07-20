@@ -14,16 +14,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check for stored JWT token on mount
     const token = localStorage.getItem('scro_token');
     const userData = localStorage.getItem('scro_user');
-    
+
     if (token && userData) {
       try {
         const parsedUser = JSON.parse(userData);
         setUser(parsedUser);
         setIsAuthenticated(true);
-      } catch (error) {
+      } catch {
         localStorage.removeItem('scro_token');
         localStorage.removeItem('scro_user');
       }
@@ -31,11 +30,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     const foundUser = mockUsers.find(u => u.email === email && u.password === password);
-    
+
     if (foundUser) {
       const userData: User = {
         id: foundUser.id,
@@ -43,42 +41,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         email: foundUser.email,
         role: foundUser.role,
       };
-      
-      // Simulate JWT token
+
       const token = `mock_jwt_${foundUser.id}_${Date.now()}`;
-      
+
       localStorage.setItem('scro_token', token);
       localStorage.setItem('scro_user', JSON.stringify(userData));
-      
+
       setUser(userData);
       setIsAuthenticated(true);
       return true;
     }
-    
-    return false;
-  };
 
-  const signup = async (name: string, email: string, password: string): Promise<boolean> => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if user already exists
-    const existingUser = mockUsers.find(u => u.email === email);
-    if (existingUser) {
-      return false;
-    }
-    
-    // Create new user (in real app, this would be sent to backend)
-    const newUser = {
-      id: String(mockUsers.length + 1),
-      name,
-      email,
-      password,
-      role: 'viewer' as const, // Default role
-    };
-    
-    mockUsers.push(newUser);
-    return true;
+    return false;
   };
 
   const logout = () => {
@@ -92,7 +66,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <AuthContext.Provider value={{
       user,
       login,
-      signup,
       logout,
       isAuthenticated,
     }}>

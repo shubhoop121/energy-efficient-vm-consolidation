@@ -25,7 +25,7 @@ const Login: React.FC = () => {
       } else {
         toast.error('Invalid credentials. Please try again.');
       }
-    } catch (error) {
+    } catch {
       toast.error('Login failed. Please try again.');
     } finally {
       setLoading(false);
@@ -83,7 +83,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Demo Credentials */}
-        <div className="bg-gray-700/50 rounded-lg p-4 mb-6 border border-gray-600">
+        {/* <div className="bg-gray-700/50 rounded-lg p-4 mb-6 border border-gray-600">
           <h3 className="text-sm font-semibold text-white mb-2">Demo Accounts:</h3>
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
               <span className="text-blue-400">viewer@scro.com / viewer123</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -171,7 +171,7 @@ const Login: React.FC = () => {
           </motion.button>
 
           {/* Signup Link */}
-          <div className="text-center">
+          {/* <div className="text-center">
             <span className="text-gray-400 text-sm">Don't have an account? </span>
             <Link
               to="/signup"
@@ -179,7 +179,7 @@ const Login: React.FC = () => {
             >
               Sign Up
             </Link>
-          </div>
+          </div> */}
         </form>
       </motion.div>
     </div>

@@ -5,13 +5,13 @@ export interface User {
   role: 'admin' | 'viewer';
 }
 
-export interface AuthContextType {
+export type AuthContextType = {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  signup: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
-}
+};
+
 
 export interface VM {
   id: string;
