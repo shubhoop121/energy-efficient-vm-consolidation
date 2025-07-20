@@ -1,43 +1,58 @@
-from flask import Blueprint, request, jsonify
-from src.agent.q_learning import QLearningAgent  # ✅ Integrated agent with cloud_env
+from flask import Blueprint, jsonify, request
+from src.agent.q_learning import QLearningAgent
 
-api_blueprint = Blueprint('api', __name__)
+routes = Blueprint("routes", __name__)
+agent = QLearningAgent()
 
-# POST /simulate — Run the Q-learning simulation
-@api_blueprint.route('/simulate', methods=['GET', 'POST'])
-def simulate():
-    if request.method == 'GET':
-        return jsonify({"message": "Use POST method to run simulation"}), 200
+@routes.route("/")
+def index():
+    return jsonify({"message": "Q-Learning VM Consolidation API is active!"})
 
-    data = request.json or {}
-    print("✅ Simulation Input Received:", data)
+@routes.route("/run-single", methods=["POST"])
+def run_single_episode():
+    try:
+        agent.env.reset()
+        agent.train()
+        metrics = agent.env.get_metrics()
+        return jsonify({
+            "message": "Single training run complete.",
+            "metrics": metrics,
+            "avg_reward": sum(agent.get_learning_curve()) / len(agent.get_learning_curve())
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    # Optional frontend parameters
-    alpha = data.get('alpha', 0.1)
-    gamma = data.get('gamma', 0.95)
-    epsilon = data.get('epsilon', 0.2)
-    episodes = data.get('episodes', 100)
+@routes.route("/batch", methods=["POST"])
+def batch_run():
+    data = request.get_json(force=True)
+    episodes = data.get("episodes", 500)
+    runs = data.get("runs", 10)
+    time_steps = data.get("time_steps", 50)
 
-    # 🧠 Initialize and run agent
-    agent = QLearningAgent(alpha=alpha, gamma=gamma, epsilon=epsilon, episodes=episodes)
-    agent.load_q_table()
-    metrics = agent.simulate()
-    agent.save_q_table()
+    try:
+        from backend.batch_test import run_batch_simulations
+        results = run_batch_simulations(
+            num_runs=runs,
+            episodes=episodes,
+            time_steps=time_steps,
+            alpha=0.1,
+            gamma=0.9,
+            epsilon=0.9
+        )
+        return jsonify({
+            "message": f"Batch completed with {runs} runs.",
+            "results": results
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    return jsonify({
-        "message": "Simulation completed",
-        "metrics": metrics,
-        "status": "success"
-    }), 200
-
-
-# GET /results — Placeholder for future result caching
-@api_blueprint.route('/results', methods=['GET'])
-def results():
-    dummy_results = {
-        "energy_saved": "25%",
-        "vm_migrations": 42,
-        "sla_violations": 2,
-        "avg_utilization": "78%"
-    }
-    return jsonify(dummy_results)
+@routes.route("/qtable", methods=["GET"])
+def get_qtable():
+    try:
+        q_table_data = {
+            str(k): {str(a): q for a, q in v.items()}
+            for k, v in agent.q_table.items()
+        }
+        return jsonify(q_table_data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
