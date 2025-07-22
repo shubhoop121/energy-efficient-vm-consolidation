@@ -1,12 +1,24 @@
-from flask import Flask
-from src.api.routes import api_blueprint
+from flask import Flask, jsonify
 from flask_cors import CORS
+from src.api.routes import routes
 
-app = Flask(__name__)
-CORS(app)  # Allows React frontend to call backend
+def create_app():
+    app = Flask(__name__)
+    CORS(app)
 
-# Register API routes
-app.register_blueprint(api_blueprint, url_prefix='/api')
+    # Register all routes
+    app.register_blueprint(routes, url_prefix="/api")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    @app.route("/health")
+    def health_check():
+        return jsonify({
+            "status": "ok",
+            "message": "Q-Learning Backend is running",
+            "version": "1.0.0"
+        })
+
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True, host="0.0.0.0", port=5000)
