@@ -8,7 +8,6 @@ import {
   Shield, 
   Bell, 
   Palette, 
-  Globe, 
   Download,
   Upload,
   RefreshCw,
