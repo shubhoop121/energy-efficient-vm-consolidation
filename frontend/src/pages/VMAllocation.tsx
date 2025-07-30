@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWebSocket } from '../hooks/useWebSocket';
@@ -11,8 +12,6 @@ import {
   Play, 
   Pause,
   Server,
-  Cpu,
-  HardDrive,
   Activity,
   Clock,
   ChevronDown,

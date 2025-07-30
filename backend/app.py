@@ -14,7 +14,7 @@ def create_app():
         return jsonify({
             "status": "ok",
             "message": "Q-Learning Backend is running",
-            "version": "1.0.0"
+            "version": "1.0.1"
         })
 
     return app

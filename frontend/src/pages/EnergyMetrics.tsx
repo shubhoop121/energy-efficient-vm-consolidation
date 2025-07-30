@@ -8,7 +8,6 @@ import {
   TrendingUp, 
   Leaf, 
   DollarSign,
-  Calendar,
   BarChart3,
   Activity,
   Target
@@ -252,7 +251,7 @@ const EnergyMetrics: React.FC = () => {
             </BarChart>
           </ResponsiveContainer>
           <div className="mt-4 grid grid-cols-3 gap-4">
-            {algorithmComparison.map((alg, index) => (
+            {algorithmComparison.map((alg) => (
               <div key={alg.algorithm} className="text-center">
                 <p className="text-xs text-gray-400">{alg.algorithm}</p>
                 <p className="text-sm font-semibold text-white">{alg.efficiency}% efficient</p>
@@ -304,7 +303,7 @@ const EnergyMetrics: React.FC = () => {
             </ResponsiveContainer>
           </div>
           <div className="grid grid-cols-2 gap-3 mt-4">
-            {serverEnergyBreakdown.map((item, index) => (
+            {serverEnergyBreakdown.map((item) => (
               <div key={item.name} className="flex items-center space-x-2">
                 <div 
                   className="w-3 h-3 rounded-full" 
