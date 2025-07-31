@@ -56,3 +56,40 @@ def get_qtable():
         return jsonify(q_table_data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@routes.route("/train-custom", methods=["POST"])
+def train_custom():
+    try:
+        data = request.get_json(force=True)
+
+        alpha = data.get("alpha", 0.1)
+        gamma = data.get("gamma", 0.9)
+        episodes = data.get("episodes", 2000)
+        time_steps = data.get("time_steps", 50)
+
+        custom_agent = QLearningAgent(
+            alpha=alpha,
+            gamma=gamma,
+            episodes=episodes,
+            time_steps_per_episode=time_steps
+        )
+
+        custom_agent.train()
+
+        metrics = custom_agent.env.get_metrics()
+        avg_reward = sum(custom_agent.get_learning_curve()) / len(custom_agent.get_learning_curve())
+
+        return jsonify({
+            "message": "Custom training completed.",
+            "episodes": episodes,
+            "time_steps": time_steps,
+            "alpha": alpha,
+            "gamma": gamma,
+            "metrics": metrics,
+            "avg_reward": avg_reward
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
