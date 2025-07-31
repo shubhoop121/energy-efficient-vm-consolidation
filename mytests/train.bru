@@ -5,9 +5,19 @@ meta {
 }
 
 post {
-  url: http://localhost:5000/train-custom
-  body: none
+  url: http://localhost:5000/api/train-custom
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "alpha": 0.05,
+    "gamma": 0.95,
+    "episodes": 1000,
+    "time_steps": 75
+  }
+  
 }
 
 settings {

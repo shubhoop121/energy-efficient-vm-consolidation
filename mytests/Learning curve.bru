@@ -1,0 +1,25 @@
+meta {
+  name: Learning curve
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:5000/api/learning-curve
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "message": "Episode reward curve retrieved successfully.",
+    "total_episodes": 500,
+    "average_reward": 3421.66,
+    "episode_rewards": [100, 200, 350, ..., 5400]
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}

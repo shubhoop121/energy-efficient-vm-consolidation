@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
           {isConnected ? (
             <div className="flex items-center space-x-2 bg-green-500/20 text-green-400 px-3 py-1 rounded-full">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">Live Data</span>
+              <span className="text-sm font-medium">Stealth Data</span>
             </div>
           ) : (
             <div className="flex items-center space-x-2 bg-red-500/20 text-red-400 px-3 py-1 rounded-full">

@@ -1,12 +1,17 @@
 from flask import Blueprint, jsonify, request
 from src.agent.q_learning import QLearningAgent
 
+
+
 routes = Blueprint("routes", __name__)
 agent = QLearningAgent()
 
 @routes.route("/")
 def index():
     return jsonify({"message": "Q-Learning VM Consolidation API is active!"})
+
+
+
 
 @routes.route("/run-single", methods=["POST"])
 def run_single_episode():
@@ -60,6 +65,8 @@ def get_qtable():
 @routes.route("/train-custom", methods=["POST"])
 def train_custom():
     try:
+        global agent  # 👈 This ensures we're modifying the global instance
+
         data = request.get_json(force=True)
 
         alpha = data.get("alpha", 0.1)
@@ -67,17 +74,19 @@ def train_custom():
         episodes = data.get("episodes", 2000)
         time_steps = data.get("time_steps", 50)
 
-        custom_agent = QLearningAgent(
+        # Reinitialize the global agent with new config
+        agent = QLearningAgent(
             alpha=alpha,
             gamma=gamma,
             episodes=episodes,
             time_steps_per_episode=time_steps
         )
 
-        custom_agent.train()
+        agent.train()
 
-        metrics = custom_agent.env.get_metrics()
-        avg_reward = sum(custom_agent.get_learning_curve()) / len(custom_agent.get_learning_curve())
+        metrics = agent.env.get_metrics()
+        rewards = agent.get_learning_curve()
+        avg_reward = sum(rewards) / len(rewards) if rewards else 0
 
         return jsonify({
             "message": "Custom training completed.",
@@ -92,4 +101,31 @@ def train_custom():
     except Exception as e:
         import traceback
         traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+    
+    # Learning curve
+@routes.route("/learning-curve", methods=["GET"])
+def get_learning_curve():
+    """
+    Returns the reward earned in each episode during training.
+    Useful for plotting how the agent's performance improves over time.
+    """
+    try:
+        rewards = agent.get_learning_curve()
+
+        if not rewards:
+            return jsonify({
+                "message": "No training data found. Please run training first.",
+                "episode_rewards": []
+            }), 200
+
+        return jsonify({
+            "message": "Episode reward curve retrieved successfully.",
+            "total_episodes": len(rewards),
+            "average_reward": sum(rewards) / len(rewards),
+            "episode_rewards": rewards
+        }), 200
+
+    except Exception as e:
         return jsonify({"error": str(e)}), 500
