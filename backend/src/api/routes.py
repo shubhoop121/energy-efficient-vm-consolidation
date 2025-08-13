@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from src.agent.q_learning import QLearningAgent
 
+import random
+from flask import Blueprint, jsonify
 
 
 routes = Blueprint("routes", __name__)
@@ -65,8 +67,7 @@ def get_qtable():
 @routes.route("/train-custom", methods=["POST"])
 def train_custom():
     try:
-        global agent  # 👈 This ensures we're modifying the global instance
-
+        global agent  
         data = request.get_json(force=True)
 
         alpha = data.get("alpha", 0.1)
@@ -129,3 +130,37 @@ def get_learning_curve():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@routes.route("/server-health", methods=["GET"])
+def server_health():
+    """
+    Returns live simulation data for 6 servers.
+    Status:
+        - Healthy: CPU < 70% and RAM < 70%
+        - Warning: 70% <= CPU < 90% or RAM >= 70%
+        - Critical: CPU >= 90% or RAM >= 90%
+    """
+    servers = []
+    for i in range(1, 7):
+        cpu = random.randint(0, 100)
+        ram = random.randint(0, 100)
+        
+        if cpu >= 90 or ram >= 90:
+            status = "Critical"
+        elif cpu >= 70 or ram >= 70:
+            status = "Warning"
+        else:
+            status = "Healthy"
+
+        servers.append({
+            "name": f"Server-{i}",
+            "cpu": cpu,
+            "ram": ram,
+            "status": status
+        })
+
+    return jsonify({
+        "message": "Live server health data",
+        "servers": servers
+    })
