@@ -1,0 +1,25 @@
+meta {
+  name: train
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:5000/api/learning-curve
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "alpha": 0.05,
+    "gamma": 0.95,
+    "episodes": 1000,
+    "time_steps": 75
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}
